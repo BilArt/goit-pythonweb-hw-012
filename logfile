@@ -1,0 +1,105 @@
+2024-12-29 18:20:31.504 CET [38047] LOG:  starting PostgreSQL 14.15 (Homebrew) on x86_64-apple-darwin23.6.0, compiled by Apple clang version 16.0.0 (clang-1600.0.26.4), 64-bit
+2024-12-29 18:20:31.506 CET [38047] LOG:  listening on IPv6 address "::1", port 5432
+2024-12-29 18:20:31.506 CET [38047] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2024-12-29 18:20:31.506 CET [38047] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2024-12-29 18:20:31.510 CET [38048] LOG:  database system was shut down at 2024-12-29 18:20:01 CET
+2024-12-29 18:20:31.521 CET [38047] LOG:  database system is ready to accept connections
+2024-12-29 18:22:31.546 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:32.246 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:32.246 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:32.947 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:32.947 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:33.647 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:33.647 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:34.349 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:34.349 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:35.050 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:35.050 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:35.752 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:35.752 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:36.454 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:36.454 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:37.157 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:37.157 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:37.864 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:37.864 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:38.566 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:38.566 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:39.267 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:39.267 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:39.970 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:39.970 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:40.672 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:40.672 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:41.374 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:41.374 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:42.072 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:42.072 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:42.508 CET [38052] LOG:  using stale statistics instead of current ones because stats collector is not responding
+2024-12-29 18:22:42.509 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:42.509 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:43.209 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:43.209 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:43.910 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:43.910 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:44.612 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:44.612 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:45.315 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:45.315 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:46.016 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:46.016 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:46.717 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:46.717 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:47.416 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:47.416 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:48.123 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:48.123 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:48.822 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:48.822 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:49.524 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:49.524 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:50.224 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:50.224 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:50.925 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:50.925 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:51.627 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:51.627 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:52.329 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:52.329 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:53.039 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:53.039 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:53.479 CET [38052] LOG:  using stale statistics instead of current ones because stats collector is not responding
+2024-12-29 18:22:53.480 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:53.480 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:54.181 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:54.181 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:54.882 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:54.882 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:55.585 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:55.585 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:56.287 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:56.287 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:56.987 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:56.987 CET [38053] LOG:  could not open temporary statistics file "pg_stat_tmp/global.tmp": No such file or directory
+2024-12-29 18:22:57.001 CET [38047] LOG:  could not open file "postmaster.pid": No such file or directory
+2024-12-29 18:22:57.001 CET [38047] LOG:  performing immediate shutdown because data directory lock file is invalid
+2024-12-29 18:22:57.001 CET [38047] LOG:  received immediate shutdown request
+2024-12-29 18:22:57.001 CET [38047] LOG:  could not open file "postmaster.pid": No such file or directory
+2024-12-29 18:22:57.004 CET [38053] LOG:  could not open temporary statistics file "pg_stat/global.tmp": No such file or directory
+2024-12-29 18:22:57.009 CET [38047] LOG:  database system is shut down
+2024-12-29 18:23:17.179 CET [39171] LOG:  starting PostgreSQL 14.15 (Homebrew) on x86_64-apple-darwin23.6.0, compiled by Apple clang version 16.0.0 (clang-1600.0.26.4), 64-bit
+2024-12-29 18:23:17.181 CET [39171] LOG:  could not bind IPv6 address "::1": Address already in use
+2024-12-29 18:23:17.181 CET [39171] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+2024-12-29 18:23:17.181 CET [39171] LOG:  could not bind IPv4 address "127.0.0.1": Address already in use
+2024-12-29 18:23:17.181 CET [39171] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+2024-12-29 18:23:17.181 CET [39171] WARNING:  could not create listen socket for "localhost"
+2024-12-29 18:23:17.182 CET [39171] FATAL:  could not create any TCP/IP sockets
+2024-12-29 18:23:17.182 CET [39171] LOG:  database system is shut down
+2024-12-29 18:25:00.412 CET [39281] LOG:  starting PostgreSQL 14.15 (Homebrew) on x86_64-apple-darwin23.6.0, compiled by Apple clang version 16.0.0 (clang-1600.0.26.4), 64-bit
+2024-12-29 18:25:00.414 CET [39281] LOG:  could not bind IPv6 address "::1": Address already in use
+2024-12-29 18:25:00.414 CET [39281] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+2024-12-29 18:25:00.414 CET [39281] LOG:  could not bind IPv4 address "127.0.0.1": Address already in use
+2024-12-29 18:25:00.414 CET [39281] HINT:  Is another postmaster already running on port 5432? If not, wait a few seconds and retry.
+2024-12-29 18:25:00.414 CET [39281] WARNING:  could not create listen socket for "localhost"
+2024-12-29 18:25:00.414 CET [39281] FATAL:  could not create any TCP/IP sockets
+2024-12-29 18:25:00.415 CET [39281] LOG:  database system is shut down
