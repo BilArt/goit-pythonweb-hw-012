@@ -4,7 +4,7 @@ from jose import jwt
 from datetime import timedelta
 from contacts_api.models import User
 
-SECRET_KEY = "testsecret"
+SECRET_KEY = "q84vNKq3mZTuE9PJd6cYLBHZK7A2RPXt"
 ALGORITHM = "HS256"
 
 @pytest.fixture

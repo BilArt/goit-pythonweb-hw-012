@@ -1,6 +1,7 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional
 from datetime import date
+from pydantic import ConfigDict
 
 
 class ContactCreate(BaseModel):
@@ -16,7 +17,7 @@ class ContactResponse(ContactCreate):
     id: int
 
     class Config:
-        orm_mode = True
+        model_config = ConfigDict(from_attributes=True)
 
 
 class UserCreate(BaseModel):
