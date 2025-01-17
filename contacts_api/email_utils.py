@@ -8,13 +8,12 @@ conf = ConnectionConfig(
     MAIL_USERNAME=config("MAIL_USERNAME"),
     MAIL_PASSWORD=config("MAIL_PASSWORD"),
     MAIL_FROM=config("MAIL_FROM"),
-    MAIL_PORT=config("MAIL_PORT", cast=int),
+    MAIL_PORT=config("MAIL_PORT"),
     MAIL_SERVER=config("MAIL_SERVER"),
-    MAIL_FROM_NAME=config("MAIL_FROM_NAME"),
     MAIL_STARTTLS=True,
     MAIL_SSL_TLS=False,
     USE_CREDENTIALS=True,
-    VALIDATE_CERTS=True,
+    VALIDATE_CERTS=False
 )
 
 logging.basicConfig(level=logging.INFO)

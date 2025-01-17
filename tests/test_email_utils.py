@@ -12,6 +12,6 @@ async def test_send_email_success(mocker):
 
 @pytest.mark.asyncio
 async def test_send_email_failure(mocker):
-    mocker.patch("contacts_api.email_utils.FastMail.send_message", side_effect=Exception("Error"))
+    mocker.patch("contacts_api.auth.get_db", return_value=iter([]))
     with pytest.raises(HTTPException):
         await send_email("Test Subject", "test@example.com", "<p>Test Body</p>")

@@ -32,7 +32,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 auth_router = APIRouter()
 
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> User:
+async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> User:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email: str = payload.get("sub")
@@ -41,7 +41,7 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid authentication credentials")
 
-    user_data = redis_client.get(email)
+    user_data = await redis_client.get(email)
     if user_data:
         return User(**eval(user_data))
 
@@ -49,8 +49,9 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     if user is None:
         raise HTTPException(status_code=401, detail="User not found")
 
-    redis_client.setex(email, ACCESS_TOKEN_EXPIRE_MINUTES * 60, str(user.__dict__))
+    await redis_client.setex(email, ACCESS_TOKEN_EXPIRE_MINUTES * 60, str(user.__dict__))
     return user
+
 
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
