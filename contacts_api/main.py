@@ -4,10 +4,10 @@ from contacts_api.database import SessionLocal, engine
 from contacts_api.models import Base, Contact, User
 from contacts_api.schemas import ContactCreate, ContactResponse
 from contacts_api.auth import auth_router, get_current_user
+from contacts_api.main_router import main_router 
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional
 from datetime import date, timedelta
-
 
 Base.metadata.create_all(bind=engine)
 
@@ -22,47 +22,57 @@ app.add_middleware(
 )
 
 app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
+app.include_router(main_router, prefix="/contacts", tags=["Contacts"])
 
-@app.get("/")
-def root():
-    return {"message": "Welcome to the Contacts API!"}
 
 def get_db():
     db = SessionLocal()
     try:
         yield db
     finally:
-        db.close()
+        try:
+            db.close()
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/")
+def root() -> dict:
+    return {"message": "Welcome to the Contacts API!"}
+
 
 @app.post("/contacts/", response_model=ContactResponse)
 def create_contact(
     contact: ContactCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
-):
+) -> ContactResponse:
     db_contact = Contact(**contact.dict(), user_id=current_user.id)
     db.add(db_contact)
     db.commit()
     db.refresh(db_contact)
     return db_contact
 
+
 @app.get("/contacts/", response_model=List[ContactResponse])
 def get_contacts(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
-):
+) -> List[ContactResponse]:
     return db.query(Contact).filter(Contact.user_id == current_user.id).all()
+
 
 @app.get("/contacts/{contact_id}", response_model=ContactResponse)
 def get_contact(
     contact_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
-):
+) -> ContactResponse:
     contact = db.query(Contact).filter(Contact.id == contact_id, Contact.user_id == current_user.id).first()
     if not contact:
         raise HTTPException(status_code=404, detail="Contact not found")
     return contact
+
 
 @app.put("/contacts/{contact_id}", response_model=ContactResponse)
 def update_contact(
@@ -70,7 +80,7 @@ def update_contact(
     contact: ContactCreate,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
-):
+) -> ContactResponse:
     db_contact = db.query(Contact).filter(Contact.id == contact_id, Contact.user_id == current_user.id).first()
     if not db_contact:
         raise HTTPException(status_code=404, detail="Contact not found")
@@ -80,18 +90,20 @@ def update_contact(
     db.refresh(db_contact)
     return db_contact
 
+
 @app.delete("/contacts/{contact_id}")
 def delete_contact(
     contact_id: int,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
-):
+) -> dict:
     db_contact = db.query(Contact).filter(Contact.id == contact_id, Contact.user_id == current_user.id).first()
     if not db_contact:
         raise HTTPException(status_code=404, detail="Contact not found")
     db.delete(db_contact)
     db.commit()
     return {"message": "Contact deleted successfully"}
+
 
 @app.get("/contacts/search/", response_model=List[ContactResponse])
 def search_contacts(
@@ -100,7 +112,7 @@ def search_contacts(
     email: Optional[str] = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
-):
+) -> List[ContactResponse]:
     query = db.query(Contact).filter(Contact.user_id == current_user.id)
     if first_name:
         query = query.filter(Contact.first_name.ilike(f"%{first_name}%"))
@@ -110,14 +122,16 @@ def search_contacts(
         query = query.filter(Contact.email.ilike(f"%{email}%"))
     return query.all()
 
+
 @app.get("/contacts/upcoming-birthdays/", response_model=List[ContactResponse])
 def get_upcoming_birthdays(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
-):
+) -> List[ContactResponse]:
     today = date.today()
     next_week = today + timedelta(days=7)
     return db.query(Contact).filter(
         Contact.user_id == current_user.id,
+        Contact.birthday.isnot(None),
         Contact.birthday.between(today, next_week)
     ).all()

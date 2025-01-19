@@ -2,30 +2,18 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from contacts_api.database import Base, get_db
-from contacts_api.models import User, Base
+from contacts_api.models import User
 from contacts_api.utils import hash_password
+from contacts_api.auth import get_current_user
 from contacts_api.main import app
 
 DATABASE_URL = "sqlite:///:memory:"
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def test_engine():
     engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
     Base.metadata.create_all(bind=engine)
     yield engine
-    Base.metadata.drop_all(bind=engine)
-
-@pytest.fixture(scope="session")
-def engine():
-    engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
-    yield engine
-    engine.dispose()
-
-
-@pytest.fixture(scope="session")
-def tables(engine):
-    Base.metadata.create_all(bind=engine)
-    yield
     Base.metadata.drop_all(bind=engine)
 
 @pytest.fixture(scope="function")
@@ -34,22 +22,12 @@ def db_session(test_engine):
     transaction = connection.begin()
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=connection)
     session = SessionLocal()
-    Base.metadata.create_all(bind=connection)
     try:
         yield session
     finally:
         session.close()
         transaction.rollback()
         connection.close()
-
-@pytest.fixture
-def test_db(test_engine):
-    connection = test_engine.connect()
-    Session = sessionmaker(bind=connection)
-    db = Session()
-    yield db
-    db.close()
-    connection.close()
 
 @pytest.fixture
 def override_get_db(db_session):
@@ -66,3 +44,11 @@ def test_user(db_session: Session):
     db_session.add(user)
     db_session.commit()
     return user
+
+@pytest.fixture
+def override_get_current_user(test_user):
+    def mock_get_current_user():
+        return test_user
+    app.dependency_overrides[get_current_user] = mock_get_current_user
+    yield
+    app.dependency_overrides[get_current_user] = None
