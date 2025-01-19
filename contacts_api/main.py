@@ -23,6 +23,10 @@ app.add_middleware(
 
 app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
 
+@app.get("/")
+def root():
+    return {"message": "Welcome to the Contacts API!"}
+
 def get_db():
     db = SessionLocal()
     try:

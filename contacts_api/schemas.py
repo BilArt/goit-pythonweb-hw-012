@@ -32,8 +32,8 @@ class UserResponse(BaseModel):
     full_name: str
     is_verified: bool
 
-    class Config:
-        orm_mode = True
+    class ModelName(BaseModel):
+       model_config = ConfigDict(from_attributes=True)
 
 
 class Token(BaseModel):

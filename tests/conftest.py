@@ -2,12 +2,25 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 from contacts_api.database import Base, get_db
-from contacts_api.models import User
+from contacts_api.models import User, Base
 from contacts_api.utils import hash_password
+from contacts_api.main import app
+
+DATABASE_URL = "sqlite:///:memory:"
+
+@pytest.fixture(scope="session")
+def test_engine():
+    engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+    Base.metadata.create_all(bind=engine)
+    yield engine
+    Base.metadata.drop_all(bind=engine)
 
 @pytest.fixture(scope="session")
 def engine():
-    return create_engine("sqlite:///:memory:", connect_args={"check_same_thread": False})
+    engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+    yield engine
+    engine.dispose()
+
 
 @pytest.fixture(scope="session")
 def tables(engine):
@@ -15,22 +28,34 @@ def tables(engine):
     yield
     Base.metadata.drop_all(bind=engine)
 
-@pytest.fixture
-def db_session(engine, tables):
-    connection = engine.connect()
+@pytest.fixture(scope="function")
+def db_session(test_engine):
+    connection = test_engine.connect()
     transaction = connection.begin()
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=connection)
     session = SessionLocal()
-    yield session
-    session.close()
-    transaction.rollback()
+    Base.metadata.create_all(bind=connection)
+    try:
+        yield session
+    finally:
+        session.close()
+        transaction.rollback()
+        connection.close()
+
+@pytest.fixture
+def test_db(test_engine):
+    connection = test_engine.connect()
+    Session = sessionmaker(bind=connection)
+    db = Session()
+    yield db
+    db.close()
     connection.close()
 
 @pytest.fixture
 def override_get_db(db_session):
-    def _override():
+    def _get_db_override():
         yield db_session
-    return _override
+    app.dependency_overrides[get_db] = _get_db_override
 
 @pytest.fixture
 def test_user(db_session: Session):
@@ -41,13 +66,3 @@ def test_user(db_session: Session):
     db_session.add(user)
     db_session.commit()
     return user
-
-@pytest.fixture
-def test_db(engine):
-    connection = engine.connect()
-    transaction = connection.begin()
-    SessionLocal = sessionmaker(bind=connection)
-    session = SessionLocal()
-    yield session
-    transaction.rollback()
-    connection.close()

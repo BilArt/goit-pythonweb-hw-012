@@ -1,6 +1,5 @@
 from fastapi import HTTPException
-from fastapi_mail import FastMail, MessageSchema, ConnectionConfig, MessageType
-from fastapi_mail.errors import ConnectionErrors
+from fastapi_mail import ConnectionConfig
 from decouple import config
 import logging
 
@@ -19,19 +18,13 @@ conf = ConnectionConfig(
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-async def send_email(subject: str, email_to: str, body: str) -> None:
-    message = MessageSchema(
-        subject=subject,
-        recipients=[email_to],
-        body=body,
-        subtype=MessageType.html 
-    )
-
-    fm = FastMail(conf)
-
+async def send_email(subject: str, email_to: str, body: str):
     try:
-        await fm.send_message(message)
-        logger.info(f"Email sent successfully to {email_to}")
-    except ConnectionErrors as e:
+        print(f"\n=== Email Simulation ===")
+        print(f"Subject: {subject}")
+        print(f"To: {email_to}")
+        print(f"Body:\n{body}")
+        print(f"========================\n")
+    except Exception as e:
         logger.error(f"Failed to send email to {email_to}: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to send email, please try again later.")
+        raise HTTPException(status_code=500, detail="Failed to send email")

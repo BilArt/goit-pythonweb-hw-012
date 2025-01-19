@@ -11,9 +11,9 @@ from contacts_api.models import User
 from contacts_api.schemas import UserCreate, UserResponse, Token
 from contacts_api.utils import hash_password, verify_password
 from contacts_api.email_utils import send_email
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import redis.asyncio as redis
-import uuid
+import json
 
 cloudinary.config(
     cloud_name=config("CLOUDINARY_CLOUD_NAME"),
@@ -43,25 +43,30 @@ async def get_current_user(token: str = Depends(oauth2_scheme), db: Session = De
 
     user_data = await redis_client.get(email)
     if user_data:
-        return User(**eval(user_data))
+        return User(**json.loads(user_data))
 
     user = db.query(User).filter(User.email == email).first()
     if user is None:
         raise HTTPException(status_code=401, detail="User not found")
 
-    await redis_client.setex(email, ACCESS_TOKEN_EXPIRE_MINUTES * 60, str(user.__dict__))
+    await redis_client.setex(user.email, ACCESS_TOKEN_EXPIRE_MINUTES * 60, json.dumps({
+        "id": user.id,
+        "email": user.email,
+        "full_name": user.full_name,
+        "is_verified": user.is_verified,
+    }))
     return user
 
 
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 def create_reset_token(email: str) -> str:
     to_encode = {"sub": email}
-    expire = datetime.utcnow() + timedelta(minutes=RESET_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.now(timezone.utc) + timedelta(minutes=RESET_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
@@ -83,12 +88,8 @@ async def register_user(user: UserCreate, db: Session = Depends(get_db)) -> User
     db.refresh(new_user)
 
     verification_link = f"http://127.0.0.1:8000/auth/verify-email?email={new_user.email}"
-    email_body = f"""
-    <h1>Подтверждение email</h1>
-    <p>Для подтверждения вашего аккаунта перейдите по ссылке:</p>
-    <a href="{verification_link}">Подтвердить Email</a>
-    """
-    await send_email("Подтверждение Email", new_user.email, email_body)
+    email_body = f"<p>Click <a href='{verification_link}'>here</a> to verify your email</p>"
+    await send_email("Verify your email", new_user.email, email_body)
 
     return new_user
 
@@ -99,7 +100,12 @@ def login_user(user: UserCreate, db: Session = Depends(get_db)) -> Token:
         raise HTTPException(status_code=401, detail="Invalid email or password")
 
     access_token = create_access_token(data={"sub": db_user.email})
-    redis_client.setex(db_user.email, ACCESS_TOKEN_EXPIRE_MINUTES * 60, str(db_user.__dict__))
+    redis_client.setex(db_user.email, ACCESS_TOKEN_EXPIRE_MINUTES * 60, json.dumps({
+        "id": db_user.id,
+        "email": db_user.email,
+        "full_name": db_user.full_name,
+        "is_verified": db_user.is_verified,
+    }))
     return {"access_token": access_token, "token_type": "bearer"}
 
 @auth_router.get("/verify-email")
@@ -133,7 +139,12 @@ async def upload_avatar(
         db.commit()
         db.refresh(current_user)
 
-        redis_client.setex(current_user.email, ACCESS_TOKEN_EXPIRE_MINUTES * 60, str(current_user.__dict__))
+        await redis_client.setex(current_user.email, ACCESS_TOKEN_EXPIRE_MINUTES * 60, json.dumps({
+            "id": current_user.id,
+            "email": current_user.email,
+            "full_name": current_user.full_name,
+            "is_verified": current_user.is_verified,
+        }))
 
         return current_user
     except Exception as e:
@@ -172,5 +183,5 @@ async def reset_password(token: str, new_password: str, db: Session = Depends(ge
     user.password = hash_password(new_password)
     db.commit()
 
-    redis_client.delete(email)
+    await redis_client.delete(email)
     return {"message": "Password has been reset successfully"}

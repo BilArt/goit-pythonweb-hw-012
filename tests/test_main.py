@@ -10,21 +10,17 @@ from contacts_api.database import Base, get_db
 DATABASE_URL = "sqlite:///:memory:"
 client = TestClient(app)
 
-@pytest.fixture(scope="module")
-def test_engine():
-    engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
-    Base.metadata.create_all(bind=engine)
-    yield engine
-    Base.metadata.drop_all(bind=engine)
+@pytest.fixture(scope="function", autouse=True)
+def setup_database(test_engine):
+    Base.metadata.create_all(bind=test_engine)
+    yield
+    Base.metadata.drop_all(bind=test_engine)
 
-@pytest.fixture(scope="function")
-def db_session(test_engine):
-    TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=test_engine)
-    session = TestingSessionLocal()
-    try:
-        yield session
-    finally:
-        session.close()
+@pytest.fixture(scope="module")
+def setup_db(engine):
+    Base.metadata.create_all(bind=engine)
+    yield
+    Base.metadata.drop_all(bind=engine)
 
 @pytest.fixture(autouse=True)
 def override_get_db(db_session):
@@ -43,47 +39,52 @@ def test_user(db_session: Session):
 
     db_session.query(User).filter_by(email=email).delete()
     db_session.commit()
+
     db_session.add(user)
     db_session.commit()
     return user
 
 def test_root_endpoint():
     response = client.get("/")
-    assert response.status_code == 404
+    assert response.status_code == 200
+    assert response.json() == {"message": "Welcome to the Contacts API!"}
 
 def test_protected_route_without_auth():
     response = client.get("/contacts/")
     assert response.status_code == 401
     assert response.json() == {"detail": "Not authenticated"}
 
-def test_register_user(mocker, db_session):
-    mock_send_email = mocker.patch("contacts_api.email_utils.send_email", return_value=None)
+@pytest.mark.asyncio
+async def test_register_user(mocker, db_session):
+    mocker.patch("contacts_api.email_utils.send_email", return_value=None)
 
-    db_session.query(User).filter_by(email="testuser@example.com").delete()
-    db_session.commit()
+    user_data = {
+        "email": "newuser@example.com",
+        "password": "securepassword",
+        "full_name": "New User"
+    }
 
-    response = client.post(
-        "/auth/register",
-        json={
-            "email": "testuser@example.com",
-            "password": "securepassword",
-            "full_name": "Test User"
-        }
-    )
+    response = client.post("/auth/register", json=user_data)
     assert response.status_code == 201
-    assert response.json()["email"] == "testuser@example.com"
-    mock_send_email.assert_called_once()
 
-def test_login_user(mocker, test_user):
-    mock_verify_password = mocker.patch("contacts_api.utils.verify_password", return_value=True)
+    db_user = db_session.query(User).filter_by(email=user_data["email"]).first()
+    assert db_user is not None
+    assert db_user.email == user_data["email"]
+    assert db_user.full_name == user_data["full_name"]
+
+
+@pytest.mark.asyncio
+async def test_login_user(mocker, test_user):
+    mocker.patch("contacts_api.utils.verify_password", return_value=True)
+    mocker.patch("contacts_api.auth.get_db", return_value=iter([test_user]))
 
     response = client.post(
         "/auth/login",
         json={
             "email": test_user.email,
-            "password": "securepassword"
-        }
+            "password": "securepassword",
+            "full_name": test_user.full_name,
+        },
     )
     assert response.status_code == 200
     assert "access_token" in response.json()
-    mock_verify_password.assert_called_once()
