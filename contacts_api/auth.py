@@ -1,3 +1,4 @@
+import asyncio
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
@@ -41,8 +42,8 @@ def get_current_user(
         email: str = payload.get("sub")
         if email is None:
             raise HTTPException(status_code=401, detail="Invalid token")
-        
-        user_data = redis_client.get(email)
+
+        user_data = asyncio.run(redis_client.get(email))
         if user_data:
             return User(**json.loads(user_data))
 
@@ -50,12 +51,12 @@ def get_current_user(
         if user is None:
             raise HTTPException(status_code=401, detail="User not found")
 
-        redis_client.setex(user.email, ACCESS_TOKEN_EXPIRE_MINUTES * 60, json.dumps({
+        asyncio.run(redis_client.setex(user.email, ACCESS_TOKEN_EXPIRE_MINUTES * 60, json.dumps({
             "id": user.id,
             "email": user.email,
             "full_name": user.full_name,
             "is_verified": user.is_verified,
-        }))
+        })))
         return user
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
@@ -79,15 +80,18 @@ async def forgot_password(payload: ForgotPasswordSchema, db: Session = Depends(g
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    reset_token = create_reset_token(payload.email)
+    reset_token = create_access_token({"sub": user.email})
     reset_link = f"http://127.0.0.1:8000/auth/reset-password?token={reset_token}"
-    email_body = f"""
-    <h1>Сброс пароля</h1>
-    <p>Для сброса пароля перейдите по ссылке:</p>
-    <a href="{reset_link}">Сбросить пароль</a>
-    """
-    await send_email("Сброс пароля", payload.email, email_body)
+
+    await send_email(
+        "Сброс пароля",
+        user.email,
+        f"<h1>Сброс пароля</h1><p>Для сброса пароля перейдите по ссылке:</p><a href='{reset_link}'>Сбросить пароль</a>",
+    )
+
     return {"message": "Password reset link sent to your email"}
+
+
 
 @auth_router.post("/reset-password")
 async def reset_password(payload: ResetPasswordSchema, db: Session = Depends(get_db)) -> dict:
@@ -117,4 +121,3 @@ async def upload_avatar(
     result = upload(file.file)
     url, _ = cloudinary_url(result["public_id"], format="jpg")
     return {"avatar_url": url}
-

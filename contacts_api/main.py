@@ -22,7 +22,9 @@ app.add_middleware(
 )
 
 app.include_router(auth_router, prefix="/auth", tags=["Authentication"])
+
 app.include_router(main_router, prefix="/contacts", tags=["Contacts"])
+
 
 
 def get_db():

@@ -5,7 +5,7 @@ from fastapi import HTTPException
 
 @pytest.mark.asyncio
 async def test_send_email_success(mocker):
-    mocker.patch("contacts_api.email_utils.print", return_value=None)
+    mocker.patch("contacts_api.email_utils.logger.info", return_value=None)
 
     try:
         await send_email("Test Subject", "test@example.com", "<p>Test Body</p>")
@@ -15,7 +15,7 @@ async def test_send_email_success(mocker):
 
 @pytest.mark.asyncio
 async def test_send_email_failure(mocker):
-    mocker.patch("contacts_api.email_utils.print", side_effect=Exception("Simulated failure"))
+    mocker.patch("contacts_api.email_utils.logger.info", side_effect=Exception("Simulated failure"))
 
     with pytest.raises(HTTPException, match="Failed to send email"):
         await send_email("Test Subject", "test@example.com", "<p>Test Body</p>")

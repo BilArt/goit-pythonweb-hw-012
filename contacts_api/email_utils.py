@@ -20,11 +20,11 @@ logger = logging.getLogger(__name__)
 
 async def send_email(subject: str, email_to: str, body: str):
     try:
-        print(f"\n=== Email Simulation ===")
-        print(f"Subject: {subject}")
-        print(f"To: {email_to}")
-        print(f"Body:\n{body}")
-        print(f"========================\n")
+        logger.info("\n=== Email Simulation ===")
+        logger.info(f"Subject: {subject}")
+        logger.info(f"To: {email_to}")
+        logger.info(f"Body:\n{body}")
+        logger.info("========================\n")
     except Exception as e:
         logger.error(f"Failed to send email to {email_to}: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to send email")

@@ -14,10 +14,6 @@ def test_user(db_session: Session):
     password = "securepassword"
     hashed_password = hash_password(password)
     user = User(email=email, password=hashed_password, full_name="Test User", is_verified=True)
-
-    db_session.query(User).filter(User.email == email).delete()
-    db_session.commit()
-
     db_session.add(user)
     db_session.commit()
     return user
