@@ -43,13 +43,16 @@ async def test_reset_password(mocker, test_user, db_session, mock_redis):
 
 @pytest.mark.asyncio
 async def test_upload_avatar(mocker, test_user, auth_headers):
-    mock_upload = mocker.patch("contacts_api.auth.upload", new_callable=mocker.AsyncMock)
+    mock_upload = mocker.patch("contacts_api.auth.upload", new_callable=mocker.Mock)
     mock_upload.return_value = {"public_id": "avatar_1"}
 
     mock_cloudinary_url = mocker.patch(
         "contacts_api.auth.cloudinary_url",
         return_value=("http://example.com/avatar.jpg", None),
     )
+
+    print("Mock upload return value:", mock_upload.return_value)
+    print("Mock cloudinary_url return value:", mock_cloudinary_url.return_value)
 
     with tempfile.NamedTemporaryFile(suffix=".jpg") as temp_file:
         temp_file.write(b"fake_image_data")
@@ -63,5 +66,5 @@ async def test_upload_avatar(mocker, test_user, auth_headers):
     assert response.status_code == 200
     assert response.json()["avatar_url"] == "http://example.com/avatar.jpg"
 
-    mock_upload.assert_awaited_once()
+    mock_upload.assert_called_once()
     mock_cloudinary_url.assert_called_once_with("avatar_1", format="jpg")

@@ -142,9 +142,14 @@ async def upload_avatar(
         raise HTTPException(status_code=400, detail="Invalid file type")
 
     try:
+        logger.info(f"Uploading avatar for {current_user.email}")
+        
         result = await asyncio.to_thread(upload, file.file)
+        logger.info(f"Upload result: {result}")
+        
         url, _ = cloudinary_url(result["public_id"], format="jpg")
-        logger.info(f"Avatar uploaded for {current_user.email} - URL: {url}")
+        logger.info(f"Generated URL: {url}")
+
         return {"avatar_url": url}
     except Exception as e:
         logger.error(f"Failed to upload avatar for {current_user.email}. Error: {e}")
